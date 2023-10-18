@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Homework2</title>
+</head>
+<body>
+    <h3>Distributions of random variables</h3>
+    
+
+
+    <div><br>Insert number of variables</div>
+    <input type="text" id="numberOfVariables"/>
+    
+    <div><br>Insert number of class interval</div>
+    <input type="text" id="numberOfClassInterval"/>
+    <br>
+    <br>
+    <button onclick="startComputing()">Compute</button>
+    <br>
+    <br>
+    <div id="distributions"></div>
+
+    <script>
+        /*Let's say that variables has 20 different values, that is defined in var numberOfValues*/
+        function computeDistributionOfRandomVariables(){
+
+            const numberOfValues = 20;
+
+            const numberOfVariables = document.getElementById("numberOfVariables").value;
+            const numberOfClassInterval = document.getElementById("numberOfClassInterval").value;
+            
+            var variables = [];
+
+            for (let i = 0; i < numberOfVariables; i++){
+                variables[i]=[];
+                for (let j = 0; j < numberOfValues; j++) {
+                    variables[i][j] = Math.random();
+                }
+            }
+
+            var distributionsOfVariables = []; 
+            var classIntervals = [];
+
+            //Define intervals
+            classIntervals = [];            
+            for(let i = 0; i <= numberOfClassInterval; i++){
+                i == 0? classIntervals[i]=0 : classIntervals[i] = i/numberOfClassInterval;
+            }         
+
+            //Distribution of variables
+            for(let v = 0; v < numberOfVariables; v++){
+
+                var distributionsOfSingleVariable = [];
+
+                for (let i = 0; i < numberOfClassInterval; i++){
+                    distributionsOfSingleVariable[i] = 0;
+                }
+
+                variables[v].forEach( value => {
+                    for (let j = 0; j < numberOfClassInterval; j++) {
+                        if (value >= classIntervals[j] && value < classIntervals[j + 1]) {
+                            distributionsOfSingleVariable[j] += 1;
+                            break;
+                        }
+                    }
+                })
+                
+                distributionsOfVariables[v] = distributionsOfSingleVariable;
+            }
+
+            return distributionsOfVariables;
+            
+        }
+
+        function printDistributions(distributions) {
+            var outputDiv = document.getElementById('distributions');
+            var listElement = document.createElement('ul');
+
+            for(let i=0; i<distributions.length; i++){
+
+                var listItemElement = document.createElement('li');
+                var listItemElementBuilder = "";
+                for(let d = 0; d < distributions[i].length; d++){
+                    listItemElementBuilder = listItemElementBuilder+ " "+(d+1)+"th interval occurs "+distributions[i][d]+" times";
+                    if (d != (distributions[i].length-1)) listItemElementBuilder = listItemElementBuilder+",";
+                }
+                listItemElement.textContent = "This is the distribution of variable number "+(i+1)+"  "+listItemElementBuilder;
+                listElement.appendChild(listItemElement);
+                outputDiv.appendChild(listElement);
+            }
+        }
+
+        function startComputing(){
+            printDistributions(computeDistributionOfRandomVariables());
+        }
+    </script>
+</body>
+</html>
